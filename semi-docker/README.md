@@ -1,0 +1,10 @@
+TOPIC 리스트 조회
+
+```bash
+semi-docker-compose exec broker kafka-topics --list --bootstrap-server broker:9092
+```
+TOPIC 정보 조회
+
+```bash
+semi-docker-compose exec broker kafka-topics --describe --topic topic1 --bootstrap-server broker:9092
+```

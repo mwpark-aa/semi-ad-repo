@@ -1,0 +1,8 @@
+CREATE DATABASE `a`;
+USE a;
+DROP TABLE IF EXISTS `admin`;
+CREATE TABLE `admin` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `kafka_num` varchar(50)
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=50005 DEFAULT CHARSET=utf8;
