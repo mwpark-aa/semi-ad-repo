@@ -32,4 +32,5 @@ pd = MessageProducer(broker, topic)
 
 for i in range(100):
     msg = {"name": "John", "age": i}
+    print(msg)
     res = pd.send_message(msg)

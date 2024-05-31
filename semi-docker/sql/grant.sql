@@ -1,3 +1,7 @@
-grant ALL PRIVILEGES ON *.* to user@'%'; FLUSH PRIVILEGES;
-create user 'a'@'%';
-grant ALL PRIVILEGES ON *.* to openx@'%'; FLUSH PRIVILEGES;
+GRANT ALL PRIVILEGES ON *.* TO 'user'@'%';
+
+CREATE USER 'a'@'%';
+GRANT ALL PRIVILEGES ON *.* to a@'%';
+
+FLUSH PRIVILEGES;
+

@@ -1,12 +1,12 @@
-import mysql
 from kafka import KafkaConsumer
 
-from query import insert_kafka
-from repository import get_db_conn
+from db.query import insert_data
+from db.repository import db_manager
 
 
 class MessageConsumer:
     def __init__(self, broker, topic):
+        self.topic = topic
         self.broker = broker
         self.consumer = KafkaConsumer(
             topic,
@@ -18,16 +18,10 @@ class MessageConsumer:
         )
 
     def receive_message(self):
-        conn = get_db_conn()
-        try:
+        with db_manager.get_connection():
             for message in self.consumer:
-                insert_kafka(conn, message.value)
-        except mysql.connector.Error:
-            conn = get_db_conn()
-        except Exception as exc:
-            raise exc
-        finally:
-            conn.close()
+                query = insert_data(self.topic, message.value)
+                db_manager.update(query=query)
 
 
 # 브로커와 토픽명을 지정한다.
