@@ -4,6 +4,7 @@ from contextlib import contextmanager
 import mysql.connector
 import pymysql
 import redis
+import json
 
 db_config = {
     'user': 'user',
@@ -49,16 +50,15 @@ class MySQLManager(DBManager):
                 self.conn.close()
 
     def update(self, query):
-        with self.get_connection() as conn:
-            try:
-                cursor = conn.cursor()
-                cursor.execute(query)
-                conn.commit()
-                return cursor.rowcount
-            except mysql.connector.Error:
-                conn.rollback()
-            finally:
-                cursor.close()
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute(query)
+            self.conn.commit()
+            return cursor.rowcount
+        except mysql.connector.Error:
+            self.conn.rollback()
+        finally:
+            cursor.close()
 
 
 class RedisManager(DBManager):
@@ -76,8 +76,25 @@ class RedisManager(DBManager):
                 self.conn.close()
 
     def update(self, key, value):
-        with self.get_connection() as conn:
-            conn.set(key, value)
+        self.conn.set(key, value)
+
+    def update(self, update_data):
+        if isinstance(update_data, str):
+            try:
+                dict_data = json.loads(update_data)
+            except json.decoder.JSONDecodeError:
+                raise ValueError("Invalid JSON")
+        elif isinstance(update_data, dict):
+            dict_data = update_data
+        else:
+            raise ValueError('Update data must be dict or str')
+
+        for key, value in dict_data.items():
+            try:
+                self.conn.set(key, value)
+            except Exception as e:
+                print('error occured when update redis' + e)
+                continue
 
 
 redis_manager = RedisManager()
