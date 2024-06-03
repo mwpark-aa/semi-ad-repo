@@ -1,7 +1,7 @@
 from kafka import KafkaConsumer
 
 from db.query import insert_data
-from db.repository import db_manager
+from db.repository import mysql_manager, redis_manager
 
 
 class MessageConsumer:
@@ -18,10 +18,16 @@ class MessageConsumer:
         )
 
     def receive_message(self):
-        with db_manager.get_connection():
+        # mysql 로 insert
+        # with mysql_manager.get_connection():
+        #     for message in self.consumer:
+        #         query = insert_data(self.topic, message.value)
+        #         mysql_manager.update(query=query)
+
+        # redis 로 insert
+        with redis_manager.get_connection():
             for message in self.consumer:
-                query = insert_data(self.topic, message.value)
-                db_manager.update(query=query)
+                redis_manager.update(key=self.topic, value=message.value)
 
 
 # 브로커와 토픽명을 지정한다.

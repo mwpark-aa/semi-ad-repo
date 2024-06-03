@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 kafka-python = "*"
 mysql-connector-python = "*"
+redis = "*"
 
 [dev-packages]
 
