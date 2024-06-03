@@ -27,7 +27,7 @@ class MessageConsumer:
         # redis 로 insert
         with redis_manager.get_connection():
             for message in self.consumer:
-                redis_manager.update(key=self.topic, value=message.value)
+                redis_manager.update(update_data=message.value)
 
 
 # 브로커와 토픽명을 지정한다.

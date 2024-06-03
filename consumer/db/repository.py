@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from contextlib import contextmanager
 
 import mysql.connector
-import pymysql
 import redis
 import json
 
@@ -29,7 +28,6 @@ class DBManager(ABC):
         pass
 
 
-
 class MySQLManager(DBManager):
 
     def __init__(self):
@@ -50,6 +48,7 @@ class MySQLManager(DBManager):
                 self.conn.close()
 
     def update(self, query):
+        # update or delete ( return : rowcount )
         cursor = self.conn.cursor()
         try:
             cursor.execute(query)
@@ -79,6 +78,10 @@ class RedisManager(DBManager):
         self.conn.set(key, value)
 
     def update(self, update_data):
+        """
+        :param update_data: can be json string or dict
+        :return: row count
+        """
         if isinstance(update_data, str):
             try:
                 dict_data = json.loads(update_data)
@@ -91,10 +94,22 @@ class RedisManager(DBManager):
 
         for key, value in dict_data.items():
             try:
-                self.conn.set(key, value)
+                self.conn.set(key, str(value))
             except Exception as e:
-                print('error occured when update redis' + e)
+                print('error occured when update redis', e)
                 continue
+
+    def delete(self, key):
+        try:
+            self.conn.delete(key)
+        except Exception as e:
+            print('error occured when delete redis', e)
+
+    def get(self, key):
+        try:
+            return self.conn.get(key)
+        except Exception as e:
+            print('error occured when get redis', e)
 
 
 redis_manager = RedisManager()
