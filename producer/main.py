@@ -1,3 +1,16 @@
-if __name__ == '__main__':
-    # API 요청으로 PRODUCE 하는 로직이 있으면 좋을것같음.
-    pass
+from fastapi import FastAPI
+
+from producer import MessageProducer
+
+app = FastAPI()
+
+broker = ["localhost:9092"]
+
+
+@app.get("/click/{user_id}")
+def click(user_id: str):
+    topic = "info"
+    sender = MessageProducer(broker, topic)
+    message = {f'user_{user_id}': {"click": 1}}
+    sender.send_message(message)
+    print(f'send message: {message}')

@@ -23,14 +23,3 @@ class MessageProducer:
             future.get(timeout=2)
         except Exception as exc:
             raise exc
-
-
-# 브로커와 토픽명을 지정한다.
-broker = ["localhost:9092"]
-topic = "my-topic"
-pd = MessageProducer(broker, topic)
-
-for i in range(100):
-    msg = {f"user{i}": {"name": "John", "age": i}}
-    print(msg)
-    res = pd.send_message(msg)

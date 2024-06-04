@@ -13,4 +13,8 @@ REDIS KEY 조회
 ```bash
 docker exec -it redis /bin/sh -c "redis-cli keys '*'"
 ```
-redis-cli
+
+PRODUCER 서버 실행 (FAST API)
+```bash
+uvicorn main:app --reload
+```

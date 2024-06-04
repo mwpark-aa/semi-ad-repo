@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 kafka-python = "*"
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
 
 [dev-packages]
 

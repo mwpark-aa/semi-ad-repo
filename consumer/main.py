@@ -27,11 +27,12 @@ class MessageConsumer:
         # redis 로 insert
         with redis_manager.get_connection():
             for message in self.consumer:
+                print(f'received message: {message.value}')
                 redis_manager.update(update_data=message.value)
 
 
 # 브로커와 토픽명을 지정한다.
 broker = ["localhost:9092"]
-topic = "my-topic"
+topic = "info"
 cs = MessageConsumer(broker, topic)
 cs.receive_message()
