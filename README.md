@@ -6,4 +6,5 @@ KAFKA 띄우는 방법
 
 
 
-NOSQL vs SQL
+실행방법 : 
+script.sh 파일 실행
