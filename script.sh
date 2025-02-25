@@ -26,15 +26,3 @@ if [ ! -d "$LOGS_DIR" ]; then
     mkdir -p "$LOGS_DIR"
     echo "logs 디렉터리 생성 완료"
 fi
-
-# CONSUMER 실행
-echo "CONSUMER 실행"
-cd "$CONSUMER_DIR"
-pipenv install
-nohup pipenv run python main.py | tee -a ${LOGS_DIR}/consumer.log > /dev/null 2>&1 &
-
-# PRODUCER 실행
-echo "PRODUCER 실행"
-cd "$PRODUCER_DIR"
-pipenv install
-nohup pipenv run python main.py | tee -a ${LOGS_DIR}/producer.log > /dev/null 2>&1 &

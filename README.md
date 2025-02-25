@@ -8,3 +8,7 @@ KAFKA 띄우는 방법
 
 실행방법 : 
 script.sh 파일 실행
+
+-> producer 실행
+-> consumer 실행
+
