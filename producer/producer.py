@@ -9,7 +9,7 @@ class MessageProducer:
         self.producer = KafkaProducer(
             bootstrap_servers=self.broker,
             value_serializer=lambda x: json.dumps(x).encode("utf-8"),
-            acks=0,
+            acks='all',
             api_version=(2, 5, 0),
             retries=3,
         )

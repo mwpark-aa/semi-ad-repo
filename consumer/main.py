@@ -15,6 +15,7 @@ class MessageConsumer:
             group_id='my-group',
             auto_offset_reset='latest',
             enable_auto_commit=True,
+            consumer_timeout_ms=10000
         )
 
     def receive_message(self):
@@ -25,10 +26,13 @@ class MessageConsumer:
         #         mysql_manager.update(query=query)
 
         # redis 로 insert
-        with redis_manager.get_connection():
+        try:
+            # with redis_manager.get_connection():
             for message in self.consumer:
                 print(f'received message: {message.value}')
-                redis_manager.update(update_data=message.value)
+                    # redis_manager.update(update_data=message.value)
+        except Exception as e:
+            print(e)
 
 
 # 브로커와 토픽명을 지정한다.

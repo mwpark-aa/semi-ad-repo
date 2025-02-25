@@ -1,3 +1,5 @@
+import time
+
 from fastapi import FastAPI
 
 from producer import MessageProducer
@@ -5,10 +7,6 @@ from producer import MessageProducer
 app = FastAPI()
 
 broker = ["localhost:9092"]
-
-# 실행 방법
-# uvicorn main:app --reload
-
 
 @app.get("/click/{user_id}")
 def click(user_id: str):
@@ -37,3 +35,18 @@ def get_ad(media_id: int, zone_id: int):
 
     # markup 정보 뱉음
     pass
+
+def generate_messages():
+    topic = "info"
+    sender = MessageProducer(broker, topic)
+    user_id = 1
+    while True:
+        message = {f"user_{user_id}": {"click": 1, "impression": 1}}
+        print(message)
+        sender.send_message(message)
+        user_id += 1
+        time.sleep(5)  # 5초마다 전송
+
+
+if __name__ == "__main__":
+    generate_messages()
