@@ -1,7 +1,5 @@
+import json
 from kafka import KafkaConsumer
-
-from db.query import insert_data
-from db.repository import mysql_manager, redis_manager
 
 
 class MessageConsumer:
@@ -13,30 +11,32 @@ class MessageConsumer:
             bootstrap_servers=self.broker,
             value_deserializer=lambda x: x.decode("utf-8"),
             group_id='my-group',
-            auto_offset_reset='latest',
+            auto_offset_reset='earliest',
             enable_auto_commit=True,
-            consumer_timeout_ms=10000
         )
 
     def receive_message(self):
-        # mysql 로 insert
-        # with mysql_manager.get_connection():
-        #     for message in self.consumer:
-        #         query = insert_data(self.topic, message.value)
-        #         mysql_manager.update(query=query)
-
-        # redis 로 insert
+        print("Starting Kafka consumer...")
         try:
-            # with redis_manager.get_connection():
-            for message in self.consumer:
-                print(f'received message: {message.value}')
-                    # redis_manager.update(update_data=message.value)
-        except Exception as e:
-            print(e)
+            while True:  # 무한 루프
+                for message in self.consumer:
+                    # 메시지 출력
+                    print(f"Received message: {message.value}")
 
+                    try:
+                        data = json.loads(message.value)
+                        print(f"Data indexed in Elasticsearch: {data}")
+                    except json.JSONDecodeError as json_err:
+                        print(f"JSON decode error: {json_err}")
+                        continue
+
+        except Exception as e:
+            print(f"Error occurred: {e}")
+        finally:
+            self.consumer.close()
 
 # 브로커와 토픽명을 지정한다.
-broker = ["localhost:9092"]
+broker = "localhost:9092"
 topic = "info"
 cs = MessageConsumer(broker, topic)
 cs.receive_message()

@@ -6,7 +6,7 @@ from producer import MessageProducer
 
 app = FastAPI()
 
-broker = ["localhost:9092"]
+broker = "localhost:9092"
 
 @app.get("/click/{user_id}")
 def click(user_id: str):

@@ -17,6 +17,7 @@ class MessageProducer:
     def send_message(self, msg, auto_close=False):
         try:
             future = self.producer.send(self.topic, msg)
+            print(future.get())
             self.producer.flush()  # 비우는 작업
             if auto_close:
                 self.producer.close()
